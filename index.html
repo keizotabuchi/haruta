@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>野球で学ぶ理科クイズ</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #228B22 0%, #32CD32 100%);
+            margin: 0;
+            padding: 20px;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .title {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        .scoreboard {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            text-align: center;
+        }
+        .score-item {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #555;
+        }
+        .score-item h3 {
+            margin: 0 0 10px 0;
+            color: #FFD700;
+        }
+        .score-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .field {
+            background: #228B22;
+            border: 4px solid #8B4513;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            position: relative;
+            min-height: 350px;
+            overflow: hidden;
+        }
+        /* 外野（緑の部分） */
+        .field::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #228B22;
+            z-index: 1;
+        }
+        /* 内野（土の部分）- ダイヤモンド型 */
+        .field::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 180px;
+            height: 180px;
+            background: #DEB887;
+            border: 2px solid #CD853F;
+            transform: translate(-50%, -50%) rotate(45deg);
+            z-index: 2;
+        }
+        /* マウンド */
+        .mound {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: #DEB887;
+            border: 2px solid #CD853F;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+        .field-content {
+            position: relative;
+            z-index: 4;
+            text-align: center;
+        }
+        .field-title {
+            background: rgba(0, 0, 0, 0.8);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .bases {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        .base {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #FFFFFF;
+            border: 2px solid #000;
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7em;
+            color: #000;
+            transition: all 0.3s;
+            z-index: 5;
+        }
+        .base span {
+            transform: rotate(-45deg);
+        }
+        /* ベースの正しい位置 - ダイヤモンドの頂点に合わせる */
+        #home {
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            background: #FFFFFF;
+            border-color: #000;
+            clip-path: polygon(50% 100%, 0% 50%, 50% 0%, 100% 50%);
+        }
+        #base1 {
+            top: calc(50% + 70px);
+            right: calc(10px - 40px);
+            transform: translateY(-50%) rotate(45deg);
+        }
+        #base2 {
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+        }
+        #base3 {
+            top: calc(50% + 70px);
+            left: calc(10px + 15px - 60px + 5px);
+            transform: translateY(-50%) rotate(45deg);
+        }
+        .base.occupied {
+            background: #FFD700;
+            border-color: #FF8C00;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+        }
+        /* 守備選手の配置 */
+        .player {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #4169E1;
+            border: 2px solid #000080;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.6em;
+            color: white;
+            z-index: 6;
+        }
+        /* 投手 */
+        #pitcher {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* 捕手 */
+        #catcher {
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* 一塁手 */
+        #first-base {
+            top: calc(50% - 35px);
+            right: 160px;
+            transform: translateY(-50%);
+        }
+        /* 二塁手 */
+        #second-base {
+            top: 110px;
+            right: 210px;
+        }
+        /* 三塁手 */
+        #third-base {
+            top: calc(40% + 5px - 15px);
+            left: 160px;
+        }
+        /* 遊撃手 */
+        #shortstop {
+            top: 100px;
+            left: 190px;
+        }
+        /* 左翼手 */
+        #left-field {
+            top: calc(25% - 30px);
+            left: calc(20% + 15px);
+        }
+        /* 中堅手 */
+        #center-field {
+            top: calc(20% - 70px);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* 右翼手 */
+        #right-field {
+            top: 25%;
+            right: 20%;
+        }
+        .quiz-section {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .question {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .option {
+            background: #444;
+            border: 2px solid #666;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1em;
+        }
+        .option:hover {
+            background: #555;
+            border-color: #888;
+            transform: translateY(-2px);
+        }
+        .option.correct {
+            background: #28a745;
+            border-color: #1e7e34;
+        }
+        .option.incorrect {
+            background: #dc3545;
+            border-color: #c82333;
+        }
+        .result {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .result.hit {
+            background: #28a745;
+            color: white;
+        }
+        .result.out {
+            background: #dc3545;
+            color: white;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .easy { background: #28a745; }
+        .normal { background: #ffc107; color: #000; }
+        .hard { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">⚾ 野球で学ぶ理科クイズ ⚾</h1>
+        
+        <div class="scoreboard">
+            <div class="score-item">
+                <h3>得点</h3>
+                <div class="score-value" id="score">0</div>
+            </div>
+            <div class="score-item">
+                <h3>アウト</h3>
+                <div class="score-value" id="outs">0</div>
+            </div>
+            <div class="score-item">
+                <h3>イニング</h3>
+                <div class="score-value" id="inning">1</div>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="mound"></div>
+            <!-- 守備選手の配置 -->
+            <div class="player" id="pitcher">P</div>
+            <div class="player" id="catcher">C</div>
+            <div class="player" id="first-base">1</div>
+            <div class="player" id="second-base">2</div>
+            <div class="player" id="third-base">3</div>
+            <div class="player" id="shortstop">S</div>
+            <div class="player" id="left-field">L</div>
+            <div class="player" id="center-field">M</div>
+            <div class="player" id="right-field">R</div>
+            
+            <div class="field-content">
+                <div class="bases">
+                    <div class="base" id="base2"><span>2塁</span></div>
+                    <div class="base" id="base3"><span>3塁</span></div>
+                    <div class="base" id="base1"><span>1塁</span></div>
+                    <div class="base" id="home"><span>本塁</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-section" id="quizSection">
+            <div class="question" id="question">
+                ゲームを開始してください！
+            </div>
+            <div class="options" id="options"></div>
+            <div class="result" id="result" style="display: none;"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="startBtn" onclick="startGame()">ゲーム開始</button>
+            <button class="btn" id="resetBtn" onclick="resetGame()">ゲームリセット</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // 簡単な問題（ヒット）
+            {
+                question: "水の沸点は何度ですか？",
+                options: ["80度", "100度", "120度"],
+                correct: 1,
+                difficulty: "easy",
+                result: "ヒット！"
+            },
+            {
+                question: "植物が光合成をするのに必要なガスは？",
+                options: ["酸素", "二酸化炭素", "窒素"],
+                correct: 1,
+                difficulty: "easy",
+                result: "ヒット！"
+            },
+            {
+                question: "磁石のN極とS極では、どちらが引き合いますか？",
+                options: ["N極同士", "S極同士", "N極とS極"],
+                correct: 2,
+                difficulty: "easy",
+                result: "ヒット！"
+            },
+            {
+                question: "人間の体温は約何度ですか？",
+                options: ["34度", "36度", "38度"],
+                correct: 1,
+                difficulty: "easy",
+                result: "ヒット！"
+            },
+            {
+                question: "月の満ち欠けの周期は約何日ですか？",
+                options: ["15日", "30日", "45日"],
+                correct: 1,
+                difficulty: "easy",
+                result: "ヒット！"
+            },
+            // 普通の問題（ツーベース）
+            {
+                question: "水の密度が最大になる温度は？",
+                options: ["0度", "4度", "10度"],
+                correct: 1,
+                difficulty: "normal",
+                result: "ツーベースヒット！"
+            },
+            {
+                question: "光の三原色は赤、緑、あと一つは？",
+                options: ["黄", "青", "紫"],
+                correct: 1,
+                difficulty: "normal",
+                result: "ツーベースヒット！"
+            },
+            {
+                question: "地球の自転周期は？",
+                options: ["12時間", "24時間", "36時間"],
+                correct: 1,
+                difficulty: "normal",
+                result: "ツーベースヒット！"
+            },
+            {
+                question: "音の速さは約何m/秒？",
+                options: ["340m/秒", "3000m/秒", "30000m/秒"],
+                correct: 0,
+                difficulty: "normal",
+                result: "ツーベースヒット！"
+            },
+            {
+                question: "水の電気分解で発生する気体は？",
+                options: ["酸素と窒素", "酸素と水素", "窒素と水素"],
+                correct: 1,
+                difficulty: "normal",
+                result: "ツーベースヒット！"
+            },
+            // 難しい問題（ホームラン）
+            {
+                question: "てこの原理で、支点から作用点までの距離を何といいますか？",
+                options: ["力点", "力の腕", "作用点の腕"],
+                correct: 2,
+                difficulty: "hard",
+                result: "ホームラン！"
+            },
+            {
+                question: "星座の中で、北極星があるのは？",
+                options: ["おおぐま座", "こぐま座", "カシオペア座"],
+                correct: 1,
+                difficulty: "hard",
+                result: "ホームラン！"
+            },
+            {
+                question: "水溶液の性質を調べるときに使う紙は？",
+                options: ["リトマス紙", "pH試験紙", "両方とも正しい"],
+                correct: 2,
+                difficulty: "hard",
+                result: "ホームラン！"
+            },
+            {
+                question: "地層の重なり方で、下の層ほど古いという法則を何といいますか？",
+                options: ["重ね合わせの法則", "整合の法則", "堆積の法則"],
+                correct: 0,
+                difficulty: "hard",
+                result: "ホームラン！"
+            },
+            {
+                question: "顕微鏡で細胞を観察するとき、核を染色するのに使う液は？",
+                options: ["ヨウ素液", "酢酸オルセイン液", "ベネディクト液"],
+                correct: 1,
+                difficulty: "hard",
+                result: "ホームラン！"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let outs = 0;
+        let inning = 1;
+        let bases = [false, false, false]; // 1塁、2塁、3塁
+        let gameStarted = false;
+        let questionAnswered = false;
+
+        function startGame() {
+            gameStarted = true;
+            currentQuestion = 0;
+            score = 0;
+            outs = 0;
+            inning = 1;
+            bases = [false, false, false];
+            questionAnswered = false;
+            
+            document.getElementById('startBtn').style.display = 'none';
+            
+            updateDisplay();
+            showQuestion();
+        }
+
+        function resetGame() {
+            gameStarted = false;
+            currentQuestion = 0;
+            score = 0;
+            outs = 0;
+            inning = 1;
+            bases = [false, false, false];
+            questionAnswered = false;
+            
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('question').textContent = 'ゲームを開始してください！';
+            document.getElementById('options').innerHTML = '';
+            
+            updateDisplay();
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                currentQuestion = 0;
+            }
+            
+            const q = questions[currentQuestion];
+            const questionEl = document.getElementById('question');
+            const optionsEl = document.getElementById('options');
+            const resultEl = document.getElementById('result');
+            
+            questionEl.innerHTML = q.question + `<span class="difficulty ${q.difficulty}">${getDifficultyText(q.difficulty)}</span>`;
+            
+            optionsEl.innerHTML = '';
+            q.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                optionEl.textContent = option;
+                optionEl.onclick = () => selectOption(index);
+                optionsEl.appendChild(optionEl);
+            });
+            
+            resultEl.style.display = 'none';
+            questionAnswered = false;
+        }
+
+        function getDifficultyText(difficulty) {
+            switch(difficulty) {
+                case 'easy': return '簡単';
+                case 'normal': return '普通';
+                case 'hard': return '難しい';
+            }
+        }
+
+        function selectOption(selected) {
+            if (questionAnswered) return;
+            
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            const resultEl = document.getElementById('result');
+            
+            questionAnswered = true;
+            
+            options.forEach((option, index) => {
+                if (index === q.correct) {
+                    option.classList.add('correct');
+                } else if (index === selected && index !== q.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            if (selected === q.correct) {
+                // 正解の場合
+                resultEl.textContent = q.result;
+                resultEl.className = 'result hit';
+                resultEl.style.display = 'block';
+                
+                // 難易度に応じて進塁
+                if (q.difficulty === 'easy') {
+                    advanceRunner(1); // ヒット
+                } else if (q.difficulty === 'normal') {
+                    advanceRunner(2); // ツーベース
+                } else {
+                    advanceRunner(4); // ホームラン
+                }
+                
+                updateDisplay();
+                
+                // 2秒後に自動で次の問題へ
+                setTimeout(() => {
+                    currentQuestion++;
+                    showQuestion();
+                }, 2000);
+                
+            } else {
+                // 不正解の場合
+                outs++;
+                resultEl.textContent = 'アウト！';
+                resultEl.className = 'result out';
+                resultEl.style.display = 'block';
+                
+                if (outs >= 3) {
+                    outs = 0;
+                    inning++;
+                    bases = [false, false, false];
+                    resultEl.textContent += ` ${inning-1}回終了！`;
+                }
+                
+                updateDisplay();
+                
+                // 2秒後に自動で次の問題へ
+                setTimeout(() => {
+                    currentQuestion++;
+                    showQuestion();
+                }, 2000);
+            }
+        }
+
+        function advanceRunner(baseAdvance) {
+            if (baseAdvance === 4) {
+                // ホームラン
+                score += 1 + bases.filter(b => b).length;
+                bases = [false, false, false];
+            } else {
+                // ヒットまたはツーベース
+                let newBases = [false, false, false];
+                
+                // 既存のランナーを進める
+                for (let i = 2; i >= 0; i--) {
+                    if (bases[i]) {
+                        let newPos = i + baseAdvance;
+                        if (newPos >= 3) {
+                            score++; // ホームイン
+                        } else {
+                            newBases[newPos] = true;
+                        }
+                    }
+                }
+                
+                // バッターを進める
+                if (baseAdvance <= 3) {
+                    newBases[baseAdvance - 1] = true;
+                }
+                
+                bases = newBases;
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('outs').textContent = outs;
+            document.getElementById('inning').textContent = inning;
+            
+            // ベースの更新
+            for (let i = 0; i < 3; i++) {
+                const baseEl = document.getElementById(`base${i + 1}`);
+                if (bases[i]) {
+                    baseEl.classList.add('occupied');
+                } else {
+                    baseEl.classList.remove('occupied');
+                }
+            }
+        }
+
+        function nextQuestion() {
+            if (!questionAnswered) return;
+            
+            currentQuestion++;
+            showQuestion();
+        }
+    </script>
+</body>
+</html>
