@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>野球で学ぶ理科クイズ Ver. 2.0</title>
+    <title>野球で学ぶ気象クイズ</title>
     <style>
+        /* CSSスタイルは前回と同じなので、ここでは省略します。 */
+        /* もしコード全体が必要な場合は、お申し付けください。 */
         /* 全体のスタイル */
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #228B22 0%, #32CD32 100%);
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%); /* 空のような色に変更 */
             margin: 0;
             padding: 20px;
             color: white;
@@ -35,7 +37,7 @@
             padding: 20px;
             margin-bottom: 20px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4列に変更 */
+            grid-template-columns: repeat(4, 1fr); /* 4列 */
             gap: 15px;
             text-align: center;
         }
@@ -184,7 +186,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="title">⚾ 野球で学ぶ理科クイズ Ver. 2.0 ⚾</h1>
+        <h1 class="title">⚾ 野球で学ぶ気象クイズ ⚾</h1>
         
         <div class="scoreboard">
             <div class="score-item">
@@ -250,19 +252,44 @@
 
     <script>
         const questions = [
-            // 簡単な問題
-            { question: "植物が光合成をするのに必要なガスは？", options: ["酸素", "二酸化炭素", "窒素"], correct: 1, difficulty: "easy", explanation: "植物は、光のエネルギーを使って二酸化炭素と水から栄養（デンプンなど）と酸素を作り出します。これを光合成といいます。" },
-            { question: "磁石のN極とS極では、どちらが引き合いますか？", options: ["N極同士", "S極同士", "N極とS極"], correct: 2, difficulty: "easy", explanation: "磁石は、異なる極（N極とS極）は引き合い、同じ極（N極とN極、S極とS極）は反発し合います。" },
+            // --- 簡単な問題 (easy) ---
+            { question: "お天気のマークで、まん丸の記号（◯）は何を表している？", options: ["くもり", "晴れ", "雨"], correct: 1, difficulty: "easy", explanation: "天気記号で、◯は「快晴」や「晴れ」を表します。くもりは二重丸（◎）、雨は黒丸（●）で表されます。" },
+            { question: "太陽は、いつもどっちの方角から昇る？", options: ["西", "北", "東"], correct: 2, difficulty: "easy", explanation: "地球が西から東へ自転しているため、太陽は東の空から昇り、南の空を通って西の空へ沈んでいくように見えます。" },
+            { question: "雨が降ったあと、空にきれいなアーチ状の光が見えることがあるよ。これの名前は？", options: ["オーロラ", "にじ", "かげろう"], correct: 1, difficulty: "easy", explanation: "虹（にじ）は、空気中の水のつぶに太陽の光が当たって、色が分かれて見える現象です。" },
+            { question: "空にプカプカうかぶ「わたぐも」。これはどんな天気のときによく見られる？", options: ["雨", "晴れ", "雪"], correct: 1, difficulty: "easy", explanation: "わたぐも（積雲）は、よく晴れた日に見られる代表的な雲です。もくもくと大きくなると、にゅうどうぐも（積乱雲）になることもあります。" },
+            { question: "気温をはかるときに使う道具は？", options: ["ものさし", "はかり", "温度計"], correct: 2, difficulty: "easy", explanation: "気温（空気のあたたかさ）をはかるには温度計を使います。日なたではなく、日かげで風通しの良い場所ではかるのが正しい方法です。" },
+            { question: "冬に空から降ってくる、白くてつめたいものは？", options: ["あめ", "ひょう", "ゆき"], correct: 2, difficulty: "easy", explanation: "雪は、雲の中の氷の結晶が地上に落ちてきたものです。気温が0℃以下のときに降ります。" },
+            { question: "風の向きを調べるときに使う、矢の形をした道具の名前は？", options: ["風見鶏（かざみどり）", "風船", "風車（かざぐるま）"], correct: 0, difficulty: "easy", explanation: "風見鶏やふきながしは、風がふいてくる方角（風向）を調べるために使われます。矢が向いている方が、風がふいてくる方角です。" },
+            { question: "ピカッと光ってゴロゴロと鳴る、こわい天気といえば？", options: ["たつまき", "かみなり", "こうずい"], correct: 1, difficulty: "easy", explanation: "雷は、雲の中で発生した電気が地上に落ちる現象です。にゅうどうぐも（積乱雲）が発達すると発生します。" },
+            { question: "春、夏、秋、冬。日本の４つの季節の中で、いちばん気温が高くなるのは？", options: ["春", "夏", "秋"], correct: 1, difficulty: "easy", explanation: "日本では、太陽の光が地面を強く照らす夏が、一年でいちばん気温が高くなります。" },
+            { question: "風がまったくない、おだやかな状態をなんと言う？", options: ["無風（むふう）", "強風（きょうふう）", "暴風（ぼうふう）"], correct: 0, difficulty: "easy", explanation: "風がふいていない状態を「無風」や「凪（なぎ）」と言います。天気予報では風の強さを「風力」という段階で表します。" },
             
-            // 普通の問題
-            { question: "水の密度が最大になる温度は、約何度？", options: ["0度", "4度", "10度"], correct: 1, difficulty: "normal", explanation: "水は4℃のときに密度が最も大きくなります。そのため、凍った湖でも底の方の水は4℃に保たれ、魚が生きていけます。" },
-            { question: "音の速さは空気中で約何m/秒？", options: ["340m/秒", "1500m/秒", "30万km/秒"], correct: 0, difficulty: "normal", explanation: "音の速さは温度によって変わりますが、15℃の空気中では約340m/秒です。ちなみに光の速さは約30万km/秒です。" },
-            
-            // 難しい問題
-            { question: "地層の重なり方で、下の層ほど古いという法則を何といいますか？", options: ["地層累重の法則", "示準化石の法則", "プレートテクトニクス"], correct: 0, difficulty: "hard", explanation: "「地層累重（ちそうるいじゅう）の法則」といい、地層ができた順番を考える基本的な法則です。"},
-            { question: "顕微鏡で植物細胞を観察するとき、核を染色するのによく使われる液体は？", options: ["ヨウ素液", "酢酸カーミン液", "ベネジクト液"], correct: 1, difficulty: "hard", explanation: "酢酸カーミン液や酢酸オルセイン液は、細胞の核や染色体を赤く染めるのに使われます。ヨウ素液はデンプンを青紫色に染めます。"}
+            // --- 普通の問題 (normal) ---
+            { question: "空にうかぶ雲は、もともと何からできている？", options: ["空気のつぶ", "水蒸気", "わたあめ"], correct: 1, difficulty: "normal", explanation: "地面の水分が蒸発してできた目に見えない「水蒸気」が、空の高いところで冷やされ、小さな水のつぶや氷のつぶになって集まったものが雲です。" },
+            { question: "夏に日本にやってきて、むし暑い空気をもたらす風は、おもにどっちの方角からふく？", options: ["北西", "南東", "北東"], correct: 1, difficulty: "normal", explanation: "日本の夏は、太平洋高気圧から南東のあたたかく湿った季節風がふきます。そのため、むし暑い日が多くなります。" },
+            { question: "台風が近づくと、天気はどうなることが多い？", options: ["だんだん晴れてくる", "風や雨が強くなる", "気温が急に下がる"], correct: 1, difficulty: "normal", explanation: "台風は、強い風と激しい雨をともなう巨大な低気圧のうずです。近づいてくると、天気は大きく荒れます。" },
+            { question: "天気予報で「降水確率50%」と言っていたら、どういう意味？", options: ["１日のうち半分の時間、雨がふる", "50%の強さの雨がふる", "同じ状況のとき100回中50回は雨がふる"], correct: 2, difficulty: "normal", explanation: "降水確率は、過去の同じような気象条件のときに、実際に1mm以上の雨や雪が降った割合を示したものです。雨の強さや時間とは関係ありません。" },
+            { question: "冬にシベリアから日本へふいてくる、つめたい季節風の方角は？", options: ["北西", "南東", "南西"], correct: 0, difficulty: "normal", explanation: "日本の冬は、シベリア大陸から北西のつめたく乾燥した季節風がふきます。日本海側ではこの風が雪を降らせます。" },
+            { question: "あたたかい空気とつめたい空気がぶつかる境目のことを何という？", options: ["国境（こっきょう）", "前線（ぜんせん）", "海岸線（かいがんせん）"], correct: 1, difficulty: "normal", explanation: "性質のちがう空気のかたまり（気団）がぶつかる面を「前線面」といい、それが地面と交わる線を「前線」と呼びます。前線付近では天気が悪くなります。" },
+            { question: "地面の近くの空気が冷やされて、空気中の水蒸気が葉っぱや草の上に水のつぶとしてついたものを何という？", options: ["あられ", "きり", "つゆ"], correct: 2, difficulty: "normal", explanation: "晴れた風の弱い夜に地面の熱がうばわれる（放射冷却）と、空気中の水蒸気が冷やされて、葉っぱなどの表面に水滴となってつきます。これを露（つゆ）と言います。" },
+            { question: "空高くにできる、鳥の羽のような形の雲の名前は？", options: ["うろこぐも", "すじぐも", "ひつじぐも"], correct: 1, difficulty: "normal", explanation: "すじぐも（巻雲）は、空のいちばん高いところにできる氷のつぶでできた雲です。この雲が見えると、天気が変わるサインとも言われます。" },
+            { question: "もくもくと成長して、雷や大雨を降らせることがある「にゅうどうぐも」。正式な名前は？", options: ["積乱雲（せきらんうん）", "高積雲（こうせきうん）", "層雲（そううん）"], correct: 0, difficulty: "normal", explanation: "にゅうどうぐもは、正式には積乱雲（せきらんうん）といいます。夏の強い日差しで発生しやすく、ゲリラ豪雨や雷、ひょうなどを引きおこします。" },
+            { question: "空気のしめりぐあいを表す言葉は？", options: ["気圧（きあつ）", "湿度（しつど）", "震度（しんど）"], correct: 1, difficulty: "normal", explanation: "湿度は、空気中にどれくらいの水蒸気がふくまれているかを示す割合です。湿度が高いと、ジメジメ・むしむしすると感じます。" },
+            { question: "山の斜面をのぼった空気が、反対側の斜面をふきおりるときに、あたたかく乾燥した風になる現象を何という？", options: ["しんきろう", "フェーン現象", "たつまき"], correct: 1, difficulty: "normal", explanation: "湿った空気が山を越えるときに雨を降らせ、乾いた空気が山の反対側をふきおりるときに温度が上がるのがフェーン現象です。山火事の原因になることもあります。" },
+            { question: "白い息が「はーっ」と見えるのは、どんなとき？", options: ["あたたかくて湿度の高いとき", "つめたくて乾燥しているとき", "つめたくて湿度の高いとき"], correct: 2, difficulty: "normal", explanation: "息の中の水蒸気が、外の冷たい空気で急に冷やされて、小さな水のつぶになるため白く見えます。寒い日ほどよく見えますね。" },
+
+            // --- 難しい問題 (hard) ---
+            { question: "天気図で、中心に向かって風がふきこんでくる渦（うず）はどっち？", options: ["高気圧", "低気圧", "前線"], correct: 1, difficulty: "hard", explanation: "低気圧はまわりより気圧が低いところで、空気が集まってきて上昇気流ができます。そのため雲ができて天気が悪くなります。風は反時計回りにふきこみます。" },
+            { question: "日本の天気が西から東へ変わっていくことが多いのは、上空にふいている強い風のせいだよ。この風の名前は？", options: ["偏西風（へんせいふう）", "季節風（きせつふう）", "貿易風（ぼうえきふう）"], correct: 0, difficulty: "hard", explanation: "日本がふくまれる中緯度帯の上空には、一年中西から東へ向かう「偏西風」という強い風がふいています。天気はこの風に流されて西から東へ移っていきます。" },
+            { question: "「寒冷前線」が通過したあと、気温はどうなる？", options: ["上がる", "変わらない", "下がる"], correct: 2, difficulty: "hard", explanation: "寒冷前線は、つめたい空気があたたかい空気を押し上げながら進みます。そのため、通過したあとはつめたい空気に入れかわるので、気温が急に下がります。" },
+            { question: "春と秋の晴れた日が多いのは、どんな高気圧におおわれるから？", options: ["シベリア高気圧", "太平洋高気圧", "移動性高気圧"], correct: 2, difficulty: "hard", explanation: "春と秋は、大陸からやってくる移動性高気圧と低気圧が交互に日本を通過します。そのため、天気が数日の周期で変わります。" },
+            { question: "日本の6月ごろに雨の日が続く「梅雨（つゆ）」。これはどんな前線が原因？", options: ["温暖前線", "寒冷前線", "停滞前線"], correct: 2, difficulty: "hard", explanation: "梅雨は、北のつめたいオホーツク海気団と、南のあたたかい太平洋気団の力がつりあってできる「停滞前線（梅雨前線）」が原因で起こります。" },
+            { question: "空気の重さによっておされる力のこと。これが高いと天気が良く、低いと天気が悪くなることが多いよ。", options: ["風力", "重力", "気圧"], correct: 2, difficulty: "hard", explanation: "気圧は、空気の重さによる圧力のことです。一般的に、高気圧におおわれると下降気流ができて晴れ、低気圧におおわれると上昇気流ができて天気がくずれます。" },
+            { question: "天気図で、同じ気圧の地点をむすんだ線のことを何という？", options: ["等高線", "等圧線", "等温線"], correct: 1, difficulty: "hard", explanation: "等圧線は、気圧が等しい地点をむすんだ線で、天気図の基本です。この線の間隔がせまいほど、風が強くふきます。" },
+            { question: "空気は、あたためられるとどうなる？", options: ["軽くなって上昇する", "重くなって下降する", "変化しない"], correct: 0, difficulty: "hard", explanation: "空気はあたためられると体積がふえて（膨張して）軽くなり、上へのぼっていきます。これが上昇気流で、雲ができる原因になります。気球が空を飛ぶのもこの原理です。" },
         ];
 
+        // ここから下のJavaScriptは前回と全く同じです
         let currentQuestionIndex = 0;
         let score = 0;
         let opponentScore = 0;
@@ -306,6 +333,10 @@
             outs = 0;
             inning = 1;
             
+            // 問題をシャッフル
+            questions.sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+
             startBtn.style.display = 'none';
             gameOverModal.style.display = 'none';
             
@@ -346,10 +377,8 @@
         function showQuestion() {
             if (gameOver) return;
             
-            // 問題をシャッフルしてループさせる
             if (currentQuestionIndex >= questions.length) {
-                currentQuestionIndex = 0;
-                // questions.sort(() => Math.random() - 0.5); // 問題を毎回シャッフル
+                currentQuestionIndex = 0; // 全問解いたら最初に戻る
             }
             
             const q = questions[currentQuestionIndex];
@@ -385,13 +414,11 @@
             const q = questions[currentQuestionIndex];
             const options = document.querySelectorAll('.option');
             
-            // 正解・不正解の表示
             options.forEach((opt, idx) => {
                 if (idx === q.correct) opt.classList.add('correct');
                 else if (idx === selectedIndex) opt.classList.add('incorrect');
             });
             
-            // 解説を表示
             explanationEl.textContent = q.explanation;
             explanationEl.style.display = 'block';
             
@@ -415,7 +442,7 @@
                 baseAdvance = (rand < 0.7) ? 2 : 1;
                 resultText = (baseAdvance === 2) ? "ツーベースヒット！" : "ヒット！";
                 sounds.hit.play();
-            } else { // hard
+            } else {
                 baseAdvance = (rand < 0.7) ? 4 : 3;
                 resultText = (baseAdvance === 4) ? "ホームラン！" : "スリーベースヒット！";
                 if(baseAdvance === 4) sounds.homerun.play();
@@ -450,34 +477,28 @@
             let newBases = [...bases];
             let runsThisPlay = 0;
 
-            // バッターをホームに表示
             runners.batter.className = 'runner runner-at-home';
             
             await new Promise(resolve => setTimeout(resolve, 200));
 
-            // ホームランの場合
             if (baseAdvance === 4) {
-                // 塁上のランナーをホームイン
                 for (let i = 2; i >= 0; i--) {
                     if (bases[i]) {
                         runsThisPlay++;
-                        animateRunner(i + 1, 4); // i+1はランナー番号
+                        animateRunner(i + 1, 4);
                     }
                 }
-                // バッターランナーもホームイン
                 runsThisPlay++;
                 animateRunner('batter', 4);
-                
                 newBases = [false, false, false];
 
-            } else { // 通常のヒット
-                // 3塁から順にランナーを進める
+            } else {
                 for (let i = 2; i >= 0; i--) {
                     if (bases[i]) {
                         const newPos = i + baseAdvance;
                         if (newPos >= 3) {
                             runsThisPlay++;
-                            animateRunner(i + 1, 4); // ホームイン
+                            animateRunner(i + 1, 4);
                         } else {
                             newBases[newPos] = true;
                             animateRunner(i + 1, newPos + 1);
@@ -485,28 +506,24 @@
                         newBases[i] = false;
                     }
                 }
-                 // バッターランナーを進める
                 newBases[baseAdvance - 1] = true;
                 animateRunner('batter', baseAdvance);
             }
             
             bases = newBases;
 
-            // アニメーションが終わるのを待つ
             await new Promise(resolve => setTimeout(resolve, 1000));
             
             score += runsThisPlay;
             updateDisplay();
-            resetRunners(); // 見た目を更新
+            resetRunners();
             
-            // 次のバッターへ
             nextBatter();
         }
 
-        function animateRunner(runnerId, targetBase) { // targetBase: 1, 2, 3, 4(home)
+        function animateRunner(runnerId, targetBase) {
             const runnerEl = runners[runnerId];
             if(targetBase === 4) {
-                // ホームインの場合は特別なクラス
                 runnerEl.classList.add('runner-scoring');
             } else {
                 runnerEl.className = `runner runner-on-${targetBase}`;
@@ -514,7 +531,6 @@
         }
         
         function resetRunners() {
-             // 状態(bases)を元にランナーの見た目をリセット
             runners.batter.className = 'runner';
             runners[1].className = bases[0] ? 'runner runner-on-1' : 'runner';
             runners[2].className = bases[1] ? 'runner runner-on-2' : 'runner';
@@ -532,8 +548,7 @@
             
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            // 相手の攻撃
-            const opponentRuns = Math.floor(Math.random() * 3); // 0, 1, 2点
+            const opponentRuns = Math.floor(Math.random() * 3);
             if(opponentRuns > 0){
                 resultEl.textContent = `相手チームが ${opponentRuns} 点を獲得！`;
                 opponentScore += opponentRuns;
@@ -548,7 +563,6 @@
             
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            // ゲームセット判定
             if (inning >= 9) {
                 endGame();
             } else {
