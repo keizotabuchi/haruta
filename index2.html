@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>野球で学ぶ気象クイズ</title>
+    <title>野球で学ぶ気象クイズ（表裏対応版）</title>
     <style>
-        /* CSSスタイルは前回と同じなので、ここでは省略します。 */
-        /* もしコード全体が必要な場合は、お申し付けください。 */
-        /* 全体のスタイル */
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%); /* 空のような色に変更 */
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
             margin: 0;
             padding: 20px;
             color: white;
@@ -29,15 +26,13 @@
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
-
-        /* スコアボード */
         .scoreboard {
             background: #1a1a1a;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4列 */
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
             text-align: center;
         }
@@ -56,8 +51,6 @@
             font-size: 2em;
             font-weight: bold;
         }
-
-        /* 野球フィールド */
         .field {
             background: #228B22;
             border: 4px solid #8B4513;
@@ -68,17 +61,17 @@
             min-height: 350px;
             overflow: hidden;
         }
-        .field::before { /* 外野 */
+        .field::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: #228B22; z-index: 1;
         }
-        .field::after { /* 内野 */
+        .field::after {
             content: ''; position: absolute; top: 50%; left: 50%;
             width: 220px; height: 220px; background: #DEB887;
             border: 2px solid #CD853F;
             transform: translate(-50%, -50%) rotate(45deg); z-index: 2;
         }
-        .mound { /* マウンド */
+        .mound {
             position: absolute; top: 50%; left: 50%;
             width: 40px; height: 40px; background: #DEB887;
             border: 2px solid #CD853F; border-radius: 50%;
@@ -95,33 +88,19 @@
             position: absolute; width: 30px; height: 30px;
             background: #FFFFFF; border: 2px solid #000;
             transform: rotate(45deg); z-index: 5;
+            transition: background-color 0.3s; /* 色が変わるアニメーション */
         }
         #home { bottom: 0; left: 50%; transform: translateX(-50%) rotate(45deg); clip-path: polygon(50% 100%, 0% 50%, 50% 0%, 100% 50%);}
         #base1 { top: 50%; right: 0; transform: translateY(-50%) rotate(45deg); }
         #base2 { top: 0; left: 50%; transform: translateX(-50%) rotate(45deg); }
         #base3 { top: 50%; left: 0; transform: translateY(-50%) rotate(45deg); }
-        .base.occupied { background: #FFD700; border-color: #FF8C00; }
         
-        /* ランナー（アニメーション用） */
-        .runner {
-            position: absolute;
-            width: 25px; height: 25px;
+        /* ★ランナーがいるベースの色を赤に変更★ */
+        .base.occupied {
             background: #e74c3c;
-            border-radius: 50%;
-            border: 2px solid white;
-            z-index: 10;
-            opacity: 0; /* 最初は非表示 */
-            transition: all 0.8s ease-in-out; /* アニメーション */
+            border-color: #c0392b;
         }
         
-        /* 各ベース上のランナー位置 */
-        .runner-on-1 { top: 155px; right: 60px; opacity: 1; }
-        .runner-on-2 { top: 40px; left: calc(50% - 12.5px); opacity: 1; }
-        .runner-on-3 { top: 155px; left: 60px; opacity: 1; }
-        .runner-at-home { bottom: 50px; left: calc(50% - 12.5px); opacity: 1; }
-        .runner-scoring { bottom: 0px; opacity: 0; transform: scale(0.2); }
-
-        /* クイズセクション */
         .quiz-section {
             background: #2a2a2a; border-radius: 10px;
             padding: 25px; margin: 20px 0; min-height: 250px;
@@ -138,15 +117,14 @@
         .result { text-align: center; font-size: 1.5em; font-weight: bold; margin: 20px 0; padding: 15px; border-radius: 8px; }
         .result.hit { background: #28a745; color: white; }
         .result.out { background: #dc3545; color: white; }
+        .result.info { background: #3498db; color: white; } /* お知らせ用のスタイル */
         
-        /* 解説エリア */
         .explanation {
             background: #1a1a1a; border: 1px solid #444; border-radius: 8px;
             padding: 15px; margin-top: 20px; line-height: 1.5; color: #f0f0f0;
             font-size: 1em;
         }
         
-        /* ボタン類 */
         .controls { text-align: center; margin: 20px 0; }
         .btn {
             background: #007bff; color: white; border: none; padding: 15px 30px;
@@ -156,29 +134,20 @@
         .btn:hover { background: #0056b3; transform: translateY(-2px); }
         .btn:disabled { background: #666; cursor: not-allowed; }
         
-        /* 難易度表示 */
         .difficulty { display: inline-block; padding: 5px 10px; border-radius: 5px; font-size: 0.9em; font-weight: bold; margin-left: 10px; }
         .easy { background: #28a745; }
         .normal { background: #ffc107; color: #000; }
         .hard { background: #dc3545; }
         
-        /* ゲームオーバー画面 */
         .game-over-modal {
-            display: none; /* 初期状態は非表示 */
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8);
+            z-index: 100; justify-content: center; align-items: center;
         }
         .game-over-content {
-            background: linear-gradient(135deg, #444, #222);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            border: 3px solid #FFD700;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            background: linear-gradient(135deg, #444, #222); padding: 40px;
+            border-radius: 20px; text-align: center;
+            border: 3px solid #FFD700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
         }
         .game-over-title { font-size: 3em; color: #FFD700; margin-bottom: 20px; }
         .final-score { font-size: 1.8em; margin-bottom: 30px; }
@@ -211,15 +180,11 @@
             <div class="mound"></div>
             <div class="field-content">
                 <div class="bases">
+                    <div class="base" id="base1"></div>
                     <div class="base" id="base2"></div>
                     <div class="base" id="base3"></div>
-                    <div class="base" id="base1"></div>
                     <div class="base" id="home"></div>
                 </div>
-                <div class="runner" id="runner1"></div>
-                <div class="runner" id="runner2"></div>
-                <div class="runner" id="runner3"></div>
-                <div class="runner" id="batterRunner"></div>
             </div>
         </div>
 
@@ -252,6 +217,8 @@
 
     <script>
         const questions = [
+            // 問題リストは前回と同じなので、ここでは省略します。
+            // もし問題リストも必要であれば、再度お申し付けください。
             // --- 簡単な問題 (easy) ---
             { question: "お天気のマークで、まん丸の記号（◯）は何を表している？", options: ["くもり", "晴れ", "雨"], correct: 1, difficulty: "easy", explanation: "天気記号で、◯は「快晴」や「晴れ」を表します。くもりは二重丸（◎）、雨は黒丸（●）で表されます。" },
             { question: "太陽は、いつもどっちの方角から昇る？", options: ["西", "北", "東"], correct: 2, difficulty: "easy", explanation: "地球が西から東へ自転しているため、太陽は東の空から昇り、南の空を通って西の空へ沈んでいくように見えます。" },
@@ -289,17 +256,16 @@
             { question: "空気は、あたためられるとどうなる？", options: ["軽くなって上昇する", "重くなって下降する", "変化しない"], correct: 0, difficulty: "hard", explanation: "空気はあたためられると体積がふえて（膨張して）軽くなり、上へのぼっていきます。これが上昇気流で、雲ができる原因になります。気球が空を飛ぶのもこの原理です。" },
         ];
 
-        // ここから下のJavaScriptは前回と全く同じです
         let currentQuestionIndex = 0;
         let score = 0;
         let opponentScore = 0;
         let outs = 0;
         let inning = 1;
-        let bases = [false, false, false]; // 1塁, 2塁, 3塁
+        let topOrBottom = '表'; // '表' or '裏'
+        let bases = [false, false, false];
         let questionAnswered = false;
         let gameOver = true;
 
-        // HTML要素
         const scoreEl = document.getElementById('score');
         const opponentScoreEl = document.getElementById('opponentScore');
         const outsEl = document.getElementById('outs');
@@ -310,14 +276,6 @@
         const explanationEl = document.getElementById('explanation');
         const gameOverModal = document.getElementById('gameOverModal');
         const startBtn = document.getElementById('startBtn');
-        const runners = {
-            batter: document.getElementById('batterRunner'),
-            1: document.getElementById('runner1'),
-            2: document.getElementById('runner2'),
-            3: document.getElementById('runner3'),
-        };
-
-        // サウンド要素
         const sounds = {
             hit: document.getElementById('hitSound'),
             homerun: document.getElementById('homerunSound'),
@@ -330,19 +288,16 @@
             gameOver = false;
             score = 0;
             opponentScore = 0;
-            outs = 0;
             inning = 1;
+            topOrBottom = '表';
             
-            // 問題をシャッフル
             questions.sort(() => Math.random() - 0.5);
             currentQuestionIndex = 0;
 
             startBtn.style.display = 'none';
             gameOverModal.style.display = 'none';
             
-            resetRunners();
-            updateDisplay();
-            showQuestion();
+            resetTurn();
         }
 
         function resetGame() {
@@ -353,13 +308,8 @@
             explanationEl.style.display = 'none';
             startBtn.style.display = 'inline-block';
             gameOverModal.style.display = 'none';
-
-            score = 0;
-            opponentScore = 0;
-            outs = 0;
             inning = 1;
-            
-            resetRunners();
+            topOrBottom = '表';
             updateDisplay();
         }
 
@@ -367,7 +317,7 @@
             scoreEl.textContent = score;
             opponentScoreEl.textContent = opponentScore;
             outsEl.textContent = outs;
-            inningEl.textContent = `${inning} 表`;
+            inningEl.textContent = `${inning} ${topOrBottom}`;
             
             for(let i=0; i<3; i++){
                 document.getElementById(`base${i+1}`).classList.toggle('occupied', bases[i]);
@@ -377,9 +327,7 @@
         function showQuestion() {
             if (gameOver) return;
             
-            if (currentQuestionIndex >= questions.length) {
-                currentQuestionIndex = 0; // 全問解いたら最初に戻る
-            }
+            if (currentQuestionIndex >= questions.length) currentQuestionIndex = 0;
             
             const q = questions[currentQuestionIndex];
             
@@ -399,13 +347,7 @@
             questionAnswered = false;
         }
 
-        function getDifficultyText(difficulty) {
-            switch(difficulty) {
-                case 'easy': return 'かんたん';
-                case 'normal': return 'ふつう';
-                case 'hard': return 'むずかしい';
-            }
-        }
+        function getDifficultyText(d) { return {'easy':'かんたん','normal':'ふつう','hard':'むずかしい'}[d]; }
         
         function selectOption(selectedIndex) {
             if (questionAnswered || gameOver) return;
@@ -422,11 +364,8 @@
             explanationEl.textContent = q.explanation;
             explanationEl.style.display = 'block';
             
-            if (selectedIndex === q.correct) {
-                handleHit(q.difficulty);
-            } else {
-                handleOut();
-            }
+            if (selectedIndex === q.correct) handleHit(q.difficulty);
+            else handleOut();
         }
 
         function handleHit(difficulty) {
@@ -434,19 +373,15 @@
             let resultText = "";
             const rand = Math.random();
 
-            if (difficulty === 'easy') {
-                baseAdvance = 1;
-                resultText = "ヒット！";
-                sounds.hit.play();
-            } else if (difficulty === 'normal') {
+            if (difficulty === 'easy') { baseAdvance = 1; resultText = "ヒット！"; sounds.hit.play(); }
+            else if (difficulty === 'normal') {
                 baseAdvance = (rand < 0.7) ? 2 : 1;
                 resultText = (baseAdvance === 2) ? "ツーベースヒット！" : "ヒット！";
                 sounds.hit.play();
             } else {
                 baseAdvance = (rand < 0.7) ? 4 : 3;
                 resultText = (baseAdvance === 4) ? "ホームラン！" : "スリーベースヒット！";
-                if(baseAdvance === 4) sounds.homerun.play();
-                else sounds.hit.play();
+                if(baseAdvance === 4) sounds.homerun.play(); else sounds.hit.play();
             }
 
             resultEl.textContent = resultText;
@@ -465,111 +400,115 @@
             updateDisplay();
 
             setTimeout(() => {
-                if (outs >= 3) {
-                    changeInning();
-                } else {
-                    nextBatter();
-                }
+                if (outs >= 3) changeTurn();
+                else nextBatter();
             }, 2000);
         }
         
-        async function advanceRunners(baseAdvance) {
-            let newBases = [...bases];
+        function advanceRunners(baseAdvance) {
             let runsThisPlay = 0;
-
-            runners.batter.className = 'runner runner-at-home';
             
-            await new Promise(resolve => setTimeout(resolve, 200));
-
             if (baseAdvance === 4) {
-                for (let i = 2; i >= 0; i--) {
-                    if (bases[i]) {
-                        runsThisPlay++;
-                        animateRunner(i + 1, 4);
-                    }
-                }
-                runsThisPlay++;
-                animateRunner('batter', 4);
-                newBases = [false, false, false];
-
+                runsThisPlay = 1 + bases.filter(b => b).length;
+                bases = [false, false, false];
             } else {
                 for (let i = 2; i >= 0; i--) {
                     if (bases[i]) {
-                        const newPos = i + baseAdvance;
-                        if (newPos >= 3) {
-                            runsThisPlay++;
-                            animateRunner(i + 1, 4);
-                        } else {
-                            newBases[newPos] = true;
-                            animateRunner(i + 1, newPos + 1);
-                        }
-                        newBases[i] = false;
+                        if (i + baseAdvance >= 3) runsThisPlay++;
+                        else bases[i + baseAdvance] = true;
+                        bases[i] = false;
                     }
                 }
-                newBases[baseAdvance - 1] = true;
-                animateRunner('batter', baseAdvance);
+                bases[baseAdvance - 1] = true;
             }
-            
-            bases = newBases;
-
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
             score += runsThisPlay;
             updateDisplay();
-            resetRunners();
-            
             nextBatter();
-        }
-
-        function animateRunner(runnerId, targetBase) {
-            const runnerEl = runners[runnerId];
-            if(targetBase === 4) {
-                runnerEl.classList.add('runner-scoring');
-            } else {
-                runnerEl.className = `runner runner-on-${targetBase}`;
-            }
-        }
-        
-        function resetRunners() {
-            runners.batter.className = 'runner';
-            runners[1].className = bases[0] ? 'runner runner-on-1' : 'runner';
-            runners[2].className = bases[1] ? 'runner runner-on-2' : 'runner';
-            runners[3].className = bases[2] ? 'runner runner-on-3' : 'runner';
         }
 
         function nextBatter() {
             currentQuestionIndex++;
             showQuestion();
         }
-
-        async function changeInning() {
-            resultEl.textContent = '3アウト・チェンジ！';
-            sounds.change.play();
-            
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            const opponentRuns = Math.floor(Math.random() * 3);
-            if(opponentRuns > 0){
-                resultEl.textContent = `相手チームが ${opponentRuns} 点を獲得！`;
-                opponentScore += opponentRuns;
-            } else {
-                resultEl.textContent = '相手の攻撃は0点でした！';
-            }
-
+        
+        function resetTurn() {
             outs = 0;
             bases = [false, false, false];
-            resetRunners();
             updateDisplay();
-            
-            await new Promise(resolve => setTimeout(resolve, 2000));
 
-            if (inning >= 9) {
-                endGame();
+            if (topOrBottom === '表') {
+                showQuestion();
             } else {
-                inning++;
-                updateDisplay();
-                nextBatter();
+                startOpponentTurn();
             }
+        }
+
+        function changeTurn() {
+            sounds.change.play();
+            if (topOrBottom === '表') {
+                topOrBottom = '裏';
+                resultEl.textContent = 'チェンジ！相手の攻撃です。';
+                resultEl.className = 'result info';
+                resultEl.style.display = 'block';
+                optionsEl.innerHTML = '';
+                questionEl.textContent = '相手の攻撃中...';
+                setTimeout(resetTurn, 2000);
+            } else {
+                if (inning >= 9) {
+                    endGame();
+                    return;
+                }
+                inning++;
+                topOrBottom = '表';
+                resultEl.textContent = 'チェンジ！あなたの攻撃です。';
+                resultEl.className = 'result info';
+                resultEl.style.display = 'block';
+                setTimeout(resetTurn, 2000);
+            }
+        }
+
+        async function startOpponentTurn() {
+            let opponentOuts = 0;
+            let opponentBases = [false, false, false];
+
+            while(opponentOuts < 3) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const rand = Math.random();
+                let resultText = '';
+
+                if (rand < 0.25) { // アウト
+                    opponentOuts++;
+                    resultText = ['三振！','内野ゴロ！','外野フライ！'][Math.floor(Math.random()*3)];
+                } else if (rand < 0.85) { // ヒット
+                    resultText = '相手がヒット！';
+                    let runs = 0;
+                    for (let i = 2; i >= 0; i--) {
+                        if (opponentBases[i]) {
+                            if (i + 1 >= 3) runs++; else opponentBases[i+1] = true;
+                            opponentBases[i] = false;
+                        }
+                    }
+                    opponentBases[0] = true;
+                    opponentScore += runs;
+                } else { // 長打
+                    resultText = '相手がツーベースヒット！';
+                    let runs = 0;
+                    for (let i = 2; i >= 0; i--) {
+                        if (opponentBases[i]) {
+                            if (i + 2 >= 3) runs++; else opponentBases[i+2] = true;
+                            opponentBases[i] = false;
+                        }
+                    }
+                    opponentBases[1] = true;
+                    opponentScore += runs;
+                }
+                
+                outs = opponentOuts;
+                resultEl.textContent = resultText;
+                updateDisplay();
+            }
+            changeTurn();
         }
 
         function endGame() {
@@ -577,18 +516,12 @@
             sounds.gameSet.play();
             
             let title = "ゲームセット！";
-            let finalScoreText = `あなた ${score} - ${opponentScore} 相手`;
-            
-            if (score > opponentScore) {
-                title = "あなたの勝ち！";
-            } else if (score < opponentScore) {
-                title = "あなたの負け...。";
-            } else {
-                title = "引き分け！";
-            }
+            if (score > opponentScore) title = "あなたの勝ち！";
+            else if (score < opponentScore) title = "あなたの負け...。";
+            else title = "引き分け！";
             
             document.getElementById('gameOverTitle').textContent = title;
-            document.getElementById('finalScore').textContent = finalScoreText;
+            document.getElementById('finalScore').textContent = `あなた ${score} - ${opponentScore} 相手`;
             
             gameOverModal.style.display = 'flex';
         }
